@@ -1,0 +1,1 @@
+include ':app', ':hencoder_7', ':core', ':hencoder_8', ':hencoder_9'
