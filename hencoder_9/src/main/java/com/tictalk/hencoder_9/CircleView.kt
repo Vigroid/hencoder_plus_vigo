@@ -7,11 +7,12 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import com.tictalk.core.Utils
 
 class CircleView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
 
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    var radius = 50f
+    var radius = Utils.dp2px(50f)
         set(value) {
             Log.i("vig",value.toString())
             field = value

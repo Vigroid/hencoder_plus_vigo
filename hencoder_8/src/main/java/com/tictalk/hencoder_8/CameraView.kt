@@ -12,32 +12,56 @@ class CameraView(context: Context?, attrs: AttributeSet?) : View(context, attrs)
 
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val camera = Camera()
+    val PADDING = Utils.dp2px(100f)
+    val IMAGE_WIDTH = Utils.dp2px(200f)
+
+    var topFlip = 0f
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var bottomFlip = 0f
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var flipRotation = 0f
+        set(value) {
+            field = value
+            invalidate()
+        }
 
     init {
-        camera.rotateX(45f)
-        camera.setLocation(0f, 0f , Utils.getZFromCamera())
+        camera.setLocation(0f, 0f, Utils.getZFromCamera())
     }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
         canvas?.save()
-        canvas?.translate(100f + 400 / 2, 100f + 400 / 2)
-        canvas?.rotate(-20f)
-        canvas?.clipRect(-400f, -400f, 400f, 0f)
-        canvas?.rotate(20f)
-        canvas?.translate(-(100f + 400 / 2), -(100f + 400 / 2))
-        canvas?.drawBitmap(Utils.getAvatar(resources, 400), 100f, 100f, paint)
+        canvas?.translate(PADDING + IMAGE_WIDTH / 2, PADDING + IMAGE_WIDTH / 2)
+        canvas?.rotate(-flipRotation)
+        camera.save()
+        camera.rotateX(topFlip)
+        camera.applyToCanvas(canvas)
+        camera.restore()
+        canvas?.clipRect(-IMAGE_WIDTH, -IMAGE_WIDTH, IMAGE_WIDTH, 0f)
+        canvas?.rotate(flipRotation)
+        canvas?.translate(-(PADDING + IMAGE_WIDTH / 2), -(PADDING + IMAGE_WIDTH / 2))
+        canvas?.drawBitmap(Utils.getAvatar(resources, IMAGE_WIDTH.toInt()), PADDING, PADDING, paint)
         canvas?.restore()
 
         canvas?.save()
-        canvas?.translate(100f + 400 / 2, 100f + 400 / 2)
-        canvas?.rotate(-20f)
+        canvas?.translate(PADDING + IMAGE_WIDTH / 2, PADDING + IMAGE_WIDTH / 2)
+        canvas?.rotate(-flipRotation)
+        camera.save()
+        camera.rotateX(bottomFlip)
         camera.applyToCanvas(canvas)
-        canvas?.clipRect(-400f, 0f, 400f , 400f)
-        canvas?.rotate(20f)
-        canvas?.translate(-(100f + 400 / 2), -(100f + 400 / 2))
-        canvas?.drawBitmap(Utils.getAvatar(resources, 400), 100f, 100f, paint)
+        camera.restore()
+        canvas?.clipRect(-IMAGE_WIDTH, 0f, IMAGE_WIDTH, IMAGE_WIDTH)
+        canvas?.rotate(flipRotation)
+        canvas?.translate(-(PADDING + IMAGE_WIDTH / 2), -(PADDING + IMAGE_WIDTH / 2))
+        canvas?.drawBitmap(Utils.getAvatar(resources, IMAGE_WIDTH.toInt()), PADDING, PADDING, paint)
         canvas?.restore()
     }
 }
