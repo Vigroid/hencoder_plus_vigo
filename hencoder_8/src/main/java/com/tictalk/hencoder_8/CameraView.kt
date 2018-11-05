@@ -1,4 +1,4 @@
-package com.tictalk.henplus_8.view
+package com.tictalk.hencoder_8
 
 import android.content.Context
 import android.graphics.Camera
@@ -22,20 +22,18 @@ class CameraView(context: Context?, attrs: AttributeSet?) : View(context, attrs)
         super.onDraw(canvas)
 
         canvas?.save()
-        canvas?.translate(300f+100f, 300f+100f)
-        canvas?.clipRect(-300f,-300f,300f, 0f)
-        canvas?.translate(-(100f+300f), -(100f+300f))
-        canvas?.drawBitmap(Utils.getAvatar(resources, 600), 100f, 100f, paint)
+        canvas?.translate(100f + 400 / 2, 100f + 400 / 2)
+        canvas?.clipRect(-400 / 2f, -400 / 2f, 400 / 2f, 0f)
+        canvas?.translate(-(100f + 400 / 2), -(100f + 400 / 2))
+        canvas?.drawBitmap(Utils.getAvatar(resources, 400), 100f, 100f, paint)
         canvas?.restore()
 
-        //下部分
         canvas?.save()
-        canvas?.translate(300f+100f, 300f+100f)
+        canvas?.translate(100f + 400 / 2, 100f + 400 / 2)
         camera.applyToCanvas(canvas)
-        //3维变化前切割
-        canvas?.clipRect(-300f,0f,300f,300f)
-        canvas?.translate(-(100f+300f), -(100f+300f))
-        canvas?.drawBitmap(Utils.getAvatar(resources, 600), 100f, 100f, paint)
+        canvas?.clipRect(-400 / 2f, 0f, 400 / 2f, 400 / 2f)
+        canvas?.translate(-(100f + 400 / 2), -(100f + 400 / 2))
+        canvas?.drawBitmap(Utils.getAvatar(resources, 400), 100f, 100f, paint)
         canvas?.restore()
     }
 }
