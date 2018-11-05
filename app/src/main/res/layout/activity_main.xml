@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-    <com.tictalk.hencoder_8.CameraView
+    <com.tictalk.hencoder_9.PointView
             android:id="@+id/view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
