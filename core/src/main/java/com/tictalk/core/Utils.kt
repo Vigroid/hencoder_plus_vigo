@@ -6,6 +6,10 @@ import android.graphics.BitmapFactory
 import android.util.TypedValue
 
 object Utils {
+
+    @JvmStatic
+    val provinces = arrayListOf("北京市","天津市","上海市","江苏省","浙江省","山东省")
+
     @JvmStatic
     fun dp2px(dp:Float):Float{
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, Resources.getSystem().displayMetrics)

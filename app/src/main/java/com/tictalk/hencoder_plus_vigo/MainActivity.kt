@@ -14,11 +14,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val targetPoint = Point(Utils.dp2px(300f).toInt(),Utils.dp2px(200f).toInt())
-        val animator = ObjectAnimator.ofObject(view, "point",PointEvaluator(), targetPoint)
+        val animator = ObjectAnimator.ofObject(view,"province",ProvinceEvaluator(),"山东省")
         animator.startDelay = 1000
         animator.duration = 1500
-
         animator.start()
     }
 }
@@ -34,4 +32,15 @@ class PointEvaluator:TypeEvaluator<Point> {
         }
         return Point(x.toInt(), y.toInt())
     }
+}
+
+class ProvinceEvaluator:TypeEvaluator<String>{
+    override fun evaluate(fraction: Float, startValue: String?, endValue: String?): String {
+        val startIndex = Utils.provinces.indexOf(startValue)
+        val endIndex = Utils.provinces.indexOf(endValue)
+        val index = startIndex + (endIndex - startIndex) * fraction
+
+        return Utils.provinces[index.toInt()]
+    }
+
 }
