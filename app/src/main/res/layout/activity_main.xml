@@ -5,30 +5,16 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         tools:context=".MainActivity">
-    <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#30000000">
-        <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-    </FrameLayout>
+    <com.tictalk.hencoder11.view.SquareImageView
+            android:layout_width="200dp"
+            android:layout_height="300dp"
+            android:src="@drawable/avatar"
+            android:scaleType="centerCrop"/>
 
-    <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#30ff0000">
-        <com.tictalk.hencoder_10.MaterialEditText
-                android:id="@+id/view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Yo"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-    </FrameLayout>
-
+    <View
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:background="@drawable/avatar"/>
 </LinearLayout>
