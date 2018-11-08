@@ -25,11 +25,25 @@ class MaterialEditText(context: Context?, attrs: AttributeSet?) : AppCompatEditT
             invalidate()
         }
 
+    var useFloatingLabel = true
+    set(value) {
+        if (field!=value){
+            field = value
+            if (field){
+                setPadding(paddingLeft, (paddingTop + TEXT_SIZE + TEXT_MARGIN).toInt(), paddingRight, paddingBottom)
+            } else{
+                setPadding(paddingLeft, (paddingTop - TEXT_SIZE - TEXT_MARGIN).toInt(), paddingRight, paddingBottom)
+            }
+        }
+    }
+
     val floatingLabelAnimator = ObjectAnimator.ofFloat(this@MaterialEditText, "floatingLabelFraction", 1f, 0f)
 
     init {
         paint.textSize = TEXT_SIZE
-        setPadding(paddingLeft, (paddingTop + TEXT_SIZE + TEXT_MARGIN).toInt(), paddingRight, paddingBottom)
+        if (useFloatingLabel) {
+            setPadding(paddingLeft, (paddingTop + TEXT_SIZE + TEXT_MARGIN).toInt(), paddingRight, paddingBottom)
+        }
 
         addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
