@@ -7,14 +7,8 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         tools:context=".MainActivity">
-    <com.tictalk.hencoder11.view.SquareImageView
-            android:layout_width="200dp"
-            android:layout_height="300dp"
-            android:src="@drawable/avatar"
-            android:scaleType="centerCrop"/>
 
-    <View
-            android:layout_width="300dp"
-            android:layout_height="200dp"
-            android:background="@drawable/avatar"/>
+    <com.tictalk.hencoder11.view.CircleView
+            android:layout_width="200dp"
+            android:layout_height="300dp"/>
 </LinearLayout>
