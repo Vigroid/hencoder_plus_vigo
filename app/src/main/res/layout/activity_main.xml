@@ -8,7 +8,30 @@
         android:orientation="horizontal"
         tools:context=".MainActivity">
 
-    <com.tictalk.hencoder11.view.CircleView
-            android:layout_width="200dp"
-            android:layout_height="300dp"/>
+    <com.tictalk.hencoder11.view.TagLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <TextView android:layout_width="wrap_content" android:padding="10dp" android:background="@color/colorPrimary"
+                  android:text="miao1" android:layout_height="wrap_content" android:textSize="15sp"/>
+        <TextView android:layout_width="wrap_content" android:padding="10dp" android:background="@color/colorPrimary"
+                  android:text="miao2" android:layout_height="wrap_content" android:textSize="15sp"/>
+        <TextView android:layout_width="wrap_content" android:padding="10dp" android:background="@color/colorPrimary"
+                  android:text="miao3" android:layout_height="wrap_content" android:textSize="15sp"/>
+        <TextView android:layout_width="wrap_content" android:padding="10dp" android:background="@color/colorPrimary"
+                  android:text="miao4" android:layout_height="wrap_content" android:textSize="15sp"/>
+        <TextView android:layout_width="wrap_content" android:padding="10dp" android:background="@color/colorPrimary"
+                  android:text="miao5" android:layout_height="wrap_content" android:textSize="15sp"/>
+        <TextView android:layout_width="wrap_content" android:padding="10dp" android:background="@color/colorPrimary"
+                  android:text="miao6" android:layout_height="wrap_content" android:textSize="15sp"/>
+        <TextView android:layout_width="wrap_content" android:padding="10dp" android:background="@color/colorPrimary"
+                  android:text="miao7" android:layout_height="wrap_content" android:textSize="15sp"/>
+        <TextView android:layout_width="wrap_content" android:padding="10dp" android:background="@color/colorPrimary"
+                  android:text="miao8" android:layout_height="wrap_content" android:textSize="15sp"/>
+        <TextView android:layout_width="wrap_content" android:padding="10dp" android:background="@color/colorPrimary"
+                  android:text="miao9" android:layout_height="wrap_content" android:textSize="15sp"/>
+        <TextView android:layout_width="wrap_content" android:padding="10dp" android:background="@color/colorPrimary"
+                  android:text="miao10" android:layout_height="wrap_content" android:textSize="15sp"/>
+        <TextView android:layout_width="wrap_content" android:padding="10dp" android:background="@color/colorPrimary"
+                  android:text="miao11" android:layout_height="wrap_content" android:textSize="15sp"/>
+    </com.tictalk.hencoder11.view.TagLayout>
 </LinearLayout>
