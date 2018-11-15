@@ -2,6 +2,7 @@ package com.tictalk.hencoder_plus_vigo
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -10,7 +11,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        view.postDelayed({view.useFloatingLabel = false}, 3000)
+        view.setOnClickListener { Toast.makeText(this@MainActivity, "clicked", Toast.LENGTH_SHORT).show() }
     }
 }
 
