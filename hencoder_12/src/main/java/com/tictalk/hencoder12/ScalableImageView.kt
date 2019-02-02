@@ -1,5 +1,6 @@
 package com.tictalk.hencoder12
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -11,7 +12,8 @@ import android.view.MotionEvent
 import android.view.View
 import com.tictalk.core.Utils
 
-class ScalableImageView(context: Context, attrs: AttributeSet) : View(context, attrs), GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
+class ScalableImageView(context: Context, attrs: AttributeSet) : View(context, attrs),
+    GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
     private val IMAGE_WIDTH = Utils.dp2px(300f)
 
@@ -26,8 +28,16 @@ class ScalableImageView(context: Context, attrs: AttributeSet) : View(context, a
     private var smallScale = 1f
     //按长边填充满
     private var bigScale = 1f
-
     private var isBig = false
+    //放大缩小动画系数
+    private var scaleFraction = 0f
+        set(value) {
+            invalidate()
+            field = value
+        }
+    private val scaleAnimator by lazy {
+        ObjectAnimator.ofFloat(this@ScalableImageView, "scaleFraction", 0f, 1f)
+    }
 
     init {
         bitmap = Utils.getAvatar(resources, IMAGE_WIDTH.toInt())
@@ -53,7 +63,7 @@ class ScalableImageView(context: Context, attrs: AttributeSet) : View(context, a
 
     override fun onDraw(canvas: Canvas?) {
         canvas?.apply {
-            val scale = if(isBig) bigScale else smallScale
+            val scale = (bigScale - smallScale) * scaleFraction + smallScale
             canvas.scale(scale, scale, width / 2f, height / 2f)
             drawBitmap(bitmap, offsetX, offsetY, paint)
         }
@@ -77,7 +87,11 @@ class ScalableImageView(context: Context, attrs: AttributeSet) : View(context, a
 
     override fun onDoubleTap(e: MotionEvent?): Boolean {
         isBig = !isBig
-        invalidate()
+        if (isBig) {
+            scaleAnimator.start()
+        } else {
+            scaleAnimator.reverse()
+        }
         return false
     }
 
