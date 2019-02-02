@@ -7,10 +7,5 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         tools:context=".MainActivity">
-
-    <com.tictalk.hencoder12.TouchView
-            android:id="@+id/view"
-            android:layout_width="200dp"
-            android:layout_height="300dp"
-            android:background="@color/colorPrimary"/>
+    <com.tictalk.hencoder12.ScalableImageView android:layout_width="wrap_content" android:layout_height="wrap_content"/>
 </LinearLayout>
