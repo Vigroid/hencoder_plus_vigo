@@ -16,6 +16,7 @@ class ScalableImageView(context: Context, attrs: AttributeSet) : View(context, a
     GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
     private val IMAGE_WIDTH = Utils.dp2px(300f)
+    private val OVERWHELMING_SCALE = 1.5f
 
     private val bitmap: Bitmap
     private val detector: GestureDetectorCompat
@@ -54,9 +55,9 @@ class ScalableImageView(context: Context, attrs: AttributeSet) : View(context, a
         //图片比view宽
         if (bitmapAspect > viewAspect) {
             smallScale = width.toFloat() / bitmap.width.toFloat()
-            bigScale = height.toFloat() / bitmap.height.toFloat()
+            bigScale = (height.toFloat() / bitmap.height.toFloat()) * OVERWHELMING_SCALE
         } else {
-            bigScale = width.toFloat() / bitmap.width.toFloat()
+            bigScale = (width.toFloat() / bitmap.width.toFloat()) * OVERWHELMING_SCALE
             smallScale = height.toFloat() / bitmap.height.toFloat()
         }
     }
