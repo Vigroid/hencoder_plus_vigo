@@ -11,16 +11,18 @@ import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import android.widget.OverScroller
 import com.tictalk.core.Utils
 
 class ScalableImageView(context: Context, attrs: AttributeSet) : View(context, attrs),
-    GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
+    GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener, Runnable {
 
     private val IMAGE_WIDTH = Utils.dp2px(300f)
     private val OVERWHELMING_SCALE = 1.5f
 
     private val bitmap: Bitmap
     private val detector: GestureDetectorCompat
+    private val overScroller:OverScroller
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private var offsetX = 0f
@@ -46,6 +48,7 @@ class ScalableImageView(context: Context, attrs: AttributeSet) : View(context, a
     init {
         bitmap = Utils.getAvatar(resources, IMAGE_WIDTH.toInt())
         detector = GestureDetectorCompat(context, this)
+        overScroller = OverScroller(context)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -63,7 +66,6 @@ class ScalableImageView(context: Context, attrs: AttributeSet) : View(context, a
             bigScale = (width.toFloat() / bitmap.width.toFloat()) * OVERWHELMING_SCALE
             smallScale = height.toFloat() / bitmap.height.toFloat()
         }
-        Log.i("vigo", "sizechange")
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -85,7 +87,22 @@ class ScalableImageView(context: Context, attrs: AttributeSet) : View(context, a
 
     override fun onDown(e: MotionEvent?): Boolean = true
 
-    override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean = false
+    override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
+        if (isBig) {
+            overScroller.fling(
+                offsetX.toInt(),
+                offsetY.toInt(),
+                velocityX.toInt(),
+                velocityY.toInt(),
+                (-(bitmap.width * bigScale - width)/2).toInt(),
+                ((bitmap.width * bigScale - width)/2).toInt(),
+                (-(bitmap.height * bigScale - height)/2).toInt(),
+                ((bitmap.height * bigScale - height)/2).toInt()
+            )
+            postOnAnimation(this)
+        }
+        return false
+    }
 
     override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
         if (isBig) {
@@ -115,4 +132,13 @@ class ScalableImageView(context: Context, attrs: AttributeSet) : View(context, a
     override fun onDoubleTapEvent(e: MotionEvent?): Boolean = false
 
     override fun onSingleTapConfirmed(e: MotionEvent?): Boolean = false
+
+    override fun run() {
+       if(overScroller.computeScrollOffset()) {
+           offsetX = overScroller.currX.toFloat()
+           offsetY = overScroller.currY.toFloat()
+           invalidate()
+           postOnAnimation(this)
+       }
+    }
 }
