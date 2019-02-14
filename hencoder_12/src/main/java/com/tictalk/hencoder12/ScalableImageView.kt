@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.support.v4.view.GestureDetectorCompat
 import android.util.AttributeSet
+import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
@@ -24,6 +25,8 @@ class ScalableImageView(context: Context, attrs: AttributeSet) : View(context, a
 
     private var offsetX = 0f
     private var offsetY = 0f
+    private var originalOffsetX = 0f
+    private var originalOffsetY = 0f
 
     //按短边填充满
     private var smallScale = 1f
@@ -47,8 +50,8 @@ class ScalableImageView(context: Context, attrs: AttributeSet) : View(context, a
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        offsetX = (width - bitmap.width).toFloat() / 2f
-        offsetY = (height - bitmap.height).toFloat() / 2f
+        originalOffsetX = (width - bitmap.width).toFloat() / 2f
+        originalOffsetY = (height - bitmap.height).toFloat() / 2f
 
         val viewAspect = width / height
         val bitmapAspect = bitmap.width / bitmap.height
@@ -60,13 +63,15 @@ class ScalableImageView(context: Context, attrs: AttributeSet) : View(context, a
             bigScale = (width.toFloat() / bitmap.width.toFloat()) * OVERWHELMING_SCALE
             smallScale = height.toFloat() / bitmap.height.toFloat()
         }
+        Log.i("vigo", "sizechange")
     }
 
     override fun onDraw(canvas: Canvas?) {
         canvas?.apply {
+            canvas.translate(offsetX, offsetY)
             val scale = (bigScale - smallScale) * scaleFraction + smallScale
             canvas.scale(scale, scale, width / 2f, height / 2f)
-            drawBitmap(bitmap, offsetX, offsetY, paint)
+            drawBitmap(bitmap, originalOffsetX, originalOffsetY, paint)
         }
     }
 
@@ -82,7 +87,18 @@ class ScalableImageView(context: Context, attrs: AttributeSet) : View(context, a
 
     override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean = false
 
-    override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean = false
+    override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
+        if (isBig) {
+            offsetX -= distanceX
+            offsetX = Math.min(offsetX, (bitmap.width * bigScale - width)/2)
+            offsetX = Math.max(offsetX, -(bitmap.width * bigScale - width)/2)
+            offsetY -= distanceY
+            offsetY = Math.min(offsetY, (bitmap.height * bigScale - height)/2)
+            offsetY = Math.max(offsetY, -(bitmap.height * bigScale - height)/2)
+            invalidate()
+        }
+        return false
+    }
 
     override fun onLongPress(e: MotionEvent?) {}
 
