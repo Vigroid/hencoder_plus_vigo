@@ -35,4 +35,5 @@ dependencies {
     implementation project(':hencoder_10')
     implementation project(':hencoder_11')
     implementation project(':hencoder_12')
+    implementation project(':hencoder_13')
 }
