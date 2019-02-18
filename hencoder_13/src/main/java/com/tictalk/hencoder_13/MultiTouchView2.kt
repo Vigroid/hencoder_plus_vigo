@@ -25,9 +25,6 @@ class MultiTouchView2(context: Context, attributeSet: AttributeSet) : View(conte
     private var downX = 0f
     private var downY = 0f
 
-    private var focusX = 0f
-    private var focusY = 0f
-
     init {
         bitmap = Utils.getAvatar(context.resources, image_length.toInt())
     }
@@ -37,24 +34,32 @@ class MultiTouchView2(context: Context, attributeSet: AttributeSet) : View(conte
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        val count = event?.pointerCount ?: 0
+        val isPointUp = event?.actionMasked == MotionEvent.ACTION_POINTER_UP
+
+        var count = event?.pointerCount ?: 0
         var sumX = 0f
         var sumY = 0f
         for (i in 0 until count) {
-            sumX += event?.getX(i) ?: 0f
-            sumY += event?.getY(i) ?: 0f
+            if(!(isPointUp && i == event?.actionIndex)) {
+                sumX += event?.getX(i) ?: 0f
+                sumY += event?.getY(i) ?: 0f
+            }
         }
-        focusX = sumX / count
-        focusY = sumY / count
+        if (isPointUp){
+            count--
+        }
+
+        val focusX = sumX / count
+        val focusY = sumY / count
 
         when (event?.actionMasked) {
-            MotionEvent.ACTION_DOWN -> {
+            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_UP, MotionEvent.ACTION_POINTER_DOWN -> {
                 downX = focusX
                 downY = focusY
                 initialOffsetX = offsetX
                 initialOffsetY = offsetY
             }
-            MotionEvent.ACTION_MOVE, MotionEvent.ACTION_POINTER_UP, MotionEvent.ACTION_POINTER_DOWN-> {
+            MotionEvent.ACTION_MOVE-> {
                 //new - old(when down) + original offset(offset when down)
                 try {
                     offsetX = focusX - downX + initialOffsetX
