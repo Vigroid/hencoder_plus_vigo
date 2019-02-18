@@ -5,13 +5,14 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
+import android.util.SparseArray
 import android.view.MotionEvent
 import android.view.View
 import com.tictalk.core.Utils
 
-class MultiTouchView3(context: Context, attributeSet: AttributeSet):View(context, attributeSet){
-    private val paint= Paint(Paint.ANTI_ALIAS_FLAG)
-    private val path = Path()
+class MultiTouchView3(context: Context, attributeSet: AttributeSet) : View(context, attributeSet) {
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val paths = SparseArray<Path>()
 
     init {
         paint.style = Paint.Style.STROKE
@@ -21,17 +22,23 @@ class MultiTouchView3(context: Context, attributeSet: AttributeSet):View(context
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        when(event?.actionMasked){
-            MotionEvent.ACTION_DOWN->{
-                path.moveTo(event.x, event.y)
+        when (event?.actionMasked) {
+            MotionEvent.ACTION_DOWN ,MotionEvent.ACTION_POINTER_DOWN-> {
+                val path = Path()
+                path.moveTo(event.getX(event.actionIndex), event.getY(event.actionIndex))
+                paths.append(event.getPointerId(event.actionIndex), path)
                 invalidate()
             }
-            MotionEvent.ACTION_MOVE->{
-                path.lineTo(event.x, event.y)
+            MotionEvent.ACTION_MOVE -> {
+                for (i in 0 until event.pointerCount) {
+                    val path = paths.get(event.getPointerId(i))
+                    path.lineTo(event.getX(i), event.getY(i))
+                }
                 invalidate()
             }
-            MotionEvent.ACTION_UP->{
-                path.reset()
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_POINTER_UP -> {
+                val pointId = event.getPointerId(event.actionIndex)
+                paths.remove(pointId)
                 invalidate()
             }
         }
@@ -39,6 +46,8 @@ class MultiTouchView3(context: Context, attributeSet: AttributeSet):View(context
     }
 
     override fun onDraw(canvas: Canvas?) {
-        canvas?.drawPath(path, paint)
+        for (i in 0 until paths.size()) {
+            canvas?.drawPath(paths.valueAt(i), paint)
+        }
     }
 }
