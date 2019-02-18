@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.tictalk.core.Utils
+import java.lang.Exception
 
 class MultiTouchView1(context: Context, attributeSet: AttributeSet) : View(context, attributeSet) {
     private val image_length = Utils.dp2px(200f)
@@ -24,7 +25,7 @@ class MultiTouchView1(context: Context, attributeSet: AttributeSet) : View(conte
     private var downX = 0f
     private var downY = 0f
 
-    private var neoPointerId = -1
+    private var activePointerId = -1
 
     init {
         bitmap = Utils.getAvatar(context.resources, image_length.toInt())
@@ -35,18 +36,45 @@ class MultiTouchView1(context: Context, attributeSet: AttributeSet) : View(conte
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        when(event?.actionMasked){
-            MotionEvent.ACTION_DOWN->{
+        when (event?.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                activePointerId = event.findPointerIndex(0)
                 downX = event.x
                 downY = event.y
                 initialOffsetX = offsetX
                 initialOffsetY = offsetY
             }
-            MotionEvent.ACTION_MOVE->{
+            MotionEvent.ACTION_MOVE -> {
+                val activeIndex = event.findPointerIndex(activePointerId)
                 //new - old(when down) + original offset(offset when down)
-                offsetX = event.x - downX + initialOffsetX
-                offsetY = event.y - downY + initialOffsetY
-                invalidate()
+                try {
+                    offsetX = event.getX(activeIndex) - downX + initialOffsetX
+                    offsetY = event.getY(activeIndex) - downY + initialOffsetY
+                    invalidate()
+                }catch (ex:Exception){
+                    Log.e("vigo",ex.toString())
+                }
+            }
+            MotionEvent.ACTION_POINTER_DOWN -> {
+                activePointerId = event.getPointerId(event.actionIndex)
+                downX = event.getX(event.actionIndex)
+                downY = event.getY(event.actionIndex)
+                initialOffsetX = offsetX
+                initialOffsetY = offsetY
+            }
+            MotionEvent.ACTION_POINTER_UP -> {
+                val upPointerId = event.getPointerId(event.actionIndex)
+                //抬起的是控制移动的手指
+                if (upPointerId == activePointerId) {
+                    //是否是id最大的手指
+                    val newIndex =
+                        if (event.actionIndex == event.pointerCount - 1) event.pointerCount - 2 else event.pointerCount - 1
+                    activePointerId = event.getPointerId(newIndex)
+                    downX = event.getX(event.actionIndex)
+                    downY = event.getY(event.actionIndex)
+                    initialOffsetX = offsetX
+                    initialOffsetY = offsetY
+                }
             }
         }
         return true
